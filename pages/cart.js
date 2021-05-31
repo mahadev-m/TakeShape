@@ -1,5 +1,6 @@
 import { ShopContext } from "../context/shop";
 import React, { useContext } from "react";
+import { initiateCheckout } from "../checkout/checkout";
 
 const CartData = () => {
   const contextData = useContext(ShopContext);
@@ -7,7 +8,7 @@ const CartData = () => {
     initiateCheckout({
       lineItems: contextData.store.map(({ quantity }) => {
         return {
-          price: prices,
+          price: "price_1IpSh9SC2Rtq7FFtV2JzJbhh",
           quantity: quantity,
         };
       }),

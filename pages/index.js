@@ -2,16 +2,33 @@ import Head from "next/head";
 import "tailwindcss/tailwind.css";
 import { ShopContext } from "../context/shop";
 import React, { useContext } from "react";
-import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
+import { ApolloClient, InMemoryCache, gql, useQuery } from "@apollo/client";
 
-export default function Home(getProductList) {
+export default function Home() {
   const contextData = useContext(ShopContext);
+  //const get = useQuery(getProductList);
+  const query = gql`
+    query {
+      getProductList {
+        items {
+          name
+          image {
+            sourceUrl
+          }
+          price
+          description
+        }
+      }
+    }
+  `;
+  const { data } = useQuery(query);
+  console.log(data);
 
-  console.log("getProductList", getProductList);
   return (
     <div className="flex flex-wrap">
-      {getProductList &&
-        getProductList.getProductList.items.map((item) => (
+      {data &&
+        data.getProductList &&
+        data.getProductList.items.map((item) => (
           <div
             className="lg:w-1/4 md:w-1/2 w-5/6 lg:h-1/4 m-auto mb-6 border-2
           lg:m-10 sm:w-3/4 text-center border-gray-100 overflow-hidden shadow-xl
@@ -34,39 +51,22 @@ export default function Home(getProductList) {
   );
 }
 
-export async function getStaticProps() {
-  const client = new ApolloClient({
-    uri: "https://api.takeshape.io/project/cc40a247-12d8-4e71-8640-7f19acb873ae/v3/graphql",
-    cache: new InMemoryCache(),
+// export async function getStaticProps() {
+//   const client = new ApolloClient({
+//     uri: "https://api.takeshape.io/project/cc40a247-12d8-4e71-8640-7f19acb873ae/v3/graphql",
+//     cache: new InMemoryCache(),
 
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer 6a4f7886abf7415aadd375640f5f34f3",
-    },
-  });
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//       Authorization: "Bearer 6a4f7886abf7415aadd375640f5f34f3",
+//     },
+//   });
 
-  const { data } = await client.query({
-    query: gql`
-      query {
-        getProductList {
-          items {
-            name
-            image {
-              sourceUrl
-            }
-            price
-            description
-          }
-        }
-      }
-    `,
-  });
-
-  console.log("data", data);
-  return {
-    props: {
-      getProductList: data.getProductList,
-    },
-  };
-}
+//   console.log("data", data);
+//   return {
+//     props: {
+//       getProductList: data.getProductList,
+//     },
+//   };
+// }
