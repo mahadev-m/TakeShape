@@ -2,6 +2,8 @@ import "tailwindcss/tailwind.css";
 import ShopContextProvider from "../context/shop";
 import Nav from "../components/nav";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+//import { CSSReset } from "@chakra-ui/core";
+import { AuthProvider } from "../auth";
 
 function MyApp({ Component, pageProps }) {
   const client = new ApolloClient({
@@ -17,10 +19,12 @@ function MyApp({ Component, pageProps }) {
   return (
     <ApolloProvider client={client}>
       <ShopContextProvider>
-        <Nav />
-        <div className="lg:max-w-screen-2xl flex lg:w-full lg:m-auto md:m-auto lg:shadow-xl lg:px-6 lg:py-6">
-          <Component {...pageProps} />
-        </div>
+        <AuthProvider>
+          <Nav />
+          <div className="lg:max-w-screen-2xl flex lg:w-full lg:m-auto md:m-auto lg:shadow-xl lg:px-6 lg:py-6">
+            <Component {...pageProps} />
+          </div>
+        </AuthProvider>
       </ShopContextProvider>
     </ApolloProvider>
   );
